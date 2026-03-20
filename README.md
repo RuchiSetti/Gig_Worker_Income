@@ -14,7 +14,7 @@
 5. [Weekly Premium Model](#-weekly-premium-model)
 6. [Parametric Triggers](#-parametric-triggers)
 7. [AI/ML Integration Plan](#-aiml-integration-plan)
-8. [Platform Choice — Mobile-First + Admin Web Dashboard](#-platform-choice)
+8. [Platform Architecture: Mobile-First + Admin Web Dashboard](#-platform-architecture-mobile-first--admin-dashboard)
 9. [Tech Stack & Development Plan](#-tech-stack--development-plan)
 10. [Financial Sustainability](#-financial-sustainability)
 
@@ -106,31 +106,6 @@ Only if all 3 layers confirm → Payout is calculated and credited
 
 ---
 
-### Scenario 3: Local Zone Shutdown / Curfew
-
-**Situation:** A local protest leads to a 6-hour curfew in Ravi's primary delivery zone. He cannot access his usual pickup locations.
-
-| Metric | Value |
-|--------|-------|
-| Expected Daily Income | ₹1,100 |
-| Actual Income | ₹0 |
-| Daily Loss | ₹1,100 |
-| Coverage Plan | 60% |
-| Trust Score | 0.95 |
-| **Final Payout** | **₹1,100 × 0.60 × 0.95 = ₹627** |
-
----
-
-### Scenario 4: False Trigger (No Payout)
-
-**Situation:** Light drizzle triggers the rain sensor, but Ravi completes 11 orders — close to his normal average.
-
-**System Action:** Z-score analysis shows income drop is within normal variance (< 1.5 standard deviations). **No payout triggered.** Fraud check logs no anomaly.
-
-> This scenario demonstrates why our hybrid model is superior to pure parametric — we prevent false payouts that would make the platform financially unsustainable.
-
----
-
 ## 🔄 Application Workflow
 
 ```
@@ -171,7 +146,7 @@ Only if all 3 layers confirm → Payout is calculated and credited
                                                [CLAIM EVALUATION]
                                                           │
                                                           ▼
-                                          Fetch actual income data (API)
+                                          Fetch actual income data (platform API / simulated data)
                                                           │
                                                           ▼
                                           Z-Score: Is income drop significant?
@@ -297,6 +272,26 @@ Zenshield uses a dedicated **4-layer fraud detection architecture**. It runs as 
 > Z-score only confirms *that* income dropped. Fraud detection confirms *why* — ensuring the drop was genuine and not manipulated.
 
 ---
+### Additional Innovations (Beyond Requirements)
+
+Zenshield goes beyond basic requirements by introducing:
+
+- Trust Score-Based Payout System  
+  → Adjusts payouts based on user behavior and history  
+
+- Correlation Risk Factor (CRF)  
+  → Handles large-scale events affecting multiple users  
+
+- Weekly + Daily Hybrid Model  
+  → Weekly premium, daily monitoring, instant payouts  
+
+- Transparent Payout UI  
+  → Shows Expected vs Actual income and exact calculation  
+
+- AI Insights for Admin  
+  → Risk prediction, fraud alerts, and system analytics  
+
+---
 
 #### Why Fraud Detection is a Separate Layer
 
@@ -410,20 +405,45 @@ Even if a fraudulent claim slips through Layers A, B, and C, the low trust score
 
 ---
 
-## 📱 Platform Choice
+## 📱 Platform Architecture: Mobile-First + Admin Dashboard
 
-### Decision: **Mobile-First App + Admin Web Dashboard**
+Zenshield follows a modular, scalable architecture designed for real-time monitoring and intelligent payouts.
 
-**Why Mobile for Workers?**
-- Delivery partners work exclusively on smartphones
-- Need real-time notifications of triggers and payouts
-- UPI integration is native to mobile
-- Income tracking needs to be glanceable during shift
+### System Components
 
-**Why Web for Admins?**
-- Insurance operations teams need data-dense dashboards
-- Zone risk maps, fraud panels, analytics require large screens
-- Admin actions (adjusting CRF, flagging fraud, payout caps) need detailed views
+1. Mobile Application (User)
+- Used by delivery partners
+- Shows earnings, loss, and payouts
+- Handles onboarding, plan selection, and tracking
+
+2. Admin Dashboard (Web)
+- Monitors system-wide metrics
+- Displays risk zones, fraud alerts, and payout trends
+- Enables operational control
+
+3. Backend API Layer (FastAPI)
+- Handles all business logic
+- Manages user data, claims, and payouts
+- Connects frontend with AI models and database
+
+4. AI/ML Layer
+- Income prediction (XGBoost)
+- Fraud detection (XGBoost + Isolation Forest)
+- Risk scoring engine
+
+5. Database (PostgreSQL)
+- Stores users, income data, claims, payouts, and logs
+
+6. External Integrations
+- Weather API → detects rainfall, temperature
+- AQI API → pollution levels
+- Payment Gateway (Razorpay test mode) → payouts
+
+### Data Flow
+
+User App → Backend API → AI Models → Decision Engine → Payout Processing → User Wallet (UPI)
+
+Admin Dashboard → Backend API → Analytics & Monitoring
 
 ---
 
@@ -500,8 +520,20 @@ Target: 60–70% (industry standard for sustainable parametric insurance)
 This demonstrates the model is financially viable while providing meaningful protection to workers.
 
 ---
+### ⚡ Why Zenshield is Different
 
-##  Summary
+- Hybrid parametric + AI validation  
+- Payouts based on real income loss  
+- Z-score ensures statistical accuracy  
+- Trust score reduces fraud  
+- Transparent and user-trust focused  
+
+👉 Result: Fair, scalable, and sustainable system
+
+📌 Note:
+Zenshield strictly covers income loss only and does NOT include physical damage, health insurance, or vehicle repair coverage.
+---
+## 📌 Summary
 
 Zenshield transforms the insurance experience for gig workers from a passive, event-based payout to an **intelligent, income-validated protection system**. By combining parametric triggers with AI-driven income verification and statistical validation, we ensure that:
 
@@ -509,7 +541,7 @@ Zenshield transforms the insurance experience for gig workers from a passive, ev
 - The platform remains **financially sustainable**
 - Fraud is **detected and prevented** automatically
 - The experience is **zero-touch** — no manual claim filing needed
-
+- Zenshield eliminates basis risk — the biggest flaw in traditional parametric insurance.
 **The goal is simple: when Ravi Kumar can't work because it's raining too hard, he shouldn't lose sleep about paying rent.**
 
 ---
