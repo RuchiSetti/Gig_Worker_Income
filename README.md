@@ -543,6 +543,17 @@ Zenshield transforms the insurance experience for gig workers from a passive, ev
 - The experience is **zero-touch** — no manual claim filing needed
 - Zenshield eliminates basis risk — the biggest flaw in traditional parametric insurance.
 **The goal is simple: when Ravi Kumar can't work because it's raining too hard, he shouldn't lose sleep about paying rent.**
+  ---
+
+## 🎥 Live Demo & Prototype
+
+🔗 **Figma Prototype:**  
+👉 https://zenshield.figma.site/
+
+🎬 **Demo Video:**  
+👉 https://rqk.sh/ZenShield
+
+---
 
 ---
 
