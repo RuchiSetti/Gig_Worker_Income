@@ -551,7 +551,7 @@ Zenshield transforms the insurance experience for gig workers from a passive, ev
 👉 https://zenshield.figma.site/
 
 🎬 **Demo Video:**  
-👉 https://rqk.sh/ZenShield
+👉https://www.youtube.com/watch?v=U0GdYtLEpfE
 
 ---
 
