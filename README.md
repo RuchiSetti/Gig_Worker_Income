@@ -1,4 +1,4 @@
-# 🛡️ GigSuraksha — AI-Powered Income Protection for Gig Workers
+# 🛡️ Zenshield — AI-Powered Income Protection for Gig Workers
 ### Guidewire DEVTrails 2026 | Phase 1 Submission
 
 > *"We don't insure events. We insure actual income loss."*
@@ -39,7 +39,7 @@ When heavy rain hits a city, a delivery partner doesn't just get wet — they lo
 
 ## 💡 Our Solution
 
-**GigSuraksha** is a Hybrid AI + Parametric Income Protection Platform designed exclusively for **food delivery partners on Zomato and Swiggy**.
+**Zenshield** is a Hybrid AI + Parametric Income Protection Platform designed exclusively for **food delivery partners on Zomato and Swiggy**.
 
 ### Core Philosophy
 ```
@@ -47,7 +47,7 @@ Disruptions trigger evaluation.
 Payouts happen only when real income loss is verified.
 ```
 
-Instead of a traditional "event occurred → pay out" model, GigSuraksha uses a **3-layer validation**:
+Instead of a traditional "event occurred → pay out" model, Zenshield uses a **3-layer validation**:
 
 ```
 Layer 1: Parametric Trigger     →  Was there an external disruption?
@@ -292,7 +292,7 @@ Z = (Actual - Expected) / StdDev
 
 ### 4. Fraud Detection System
 
-GigSuraksha uses a dedicated **4-layer fraud detection architecture**. It runs as a separate gate — after Z-score confirms a real income drop but before any payout is released.
+Zenshield uses a dedicated **4-layer fraud detection architecture**. It runs as a separate gate — after Z-score confirms a real income drop but before any payout is released.
 
 > Z-score only confirms *that* income dropped. Fraud detection confirms *why* — ensuring the drop was genuine and not manipulated.
 
@@ -470,7 +470,7 @@ Even if a fraudulent claim slips through Layers A, B, and C, the low trust score
 
 ## 📊 Financial Sustainability
 
-GigSuraksha is designed to be **actuarially sound**, not just technically impressive.
+Zenshield is designed to be **actuarially sound**, not just technically impressive.
 
 ### Loss Ratio Target
 ```
@@ -503,7 +503,7 @@ This demonstrates the model is financially viable while providing meaningful pro
 
 ##  Summary
 
-GigSuraksha transforms the insurance experience for gig workers from a passive, event-based payout to an **intelligent, income-validated protection system**. By combining parametric triggers with AI-driven income verification and statistical validation, we ensure that:
+Zenshield transforms the insurance experience for gig workers from a passive, event-based payout to an **intelligent, income-validated protection system**. By combining parametric triggers with AI-driven income verification and statistical validation, we ensure that:
 
 - Workers are **fairly compensated** for real income loss
 - The platform remains **financially sustainable**
@@ -514,4 +514,4 @@ GigSuraksha transforms the insurance experience for gig workers from a passive, 
 
 ---
 
-*Guidewire DEVTrails 2026 | Phase 1 Submission | Team: GigSuraksha*
+*Guidewire DEVTrails 2026 | Phase 1 Submission | Team: Zenshield*
