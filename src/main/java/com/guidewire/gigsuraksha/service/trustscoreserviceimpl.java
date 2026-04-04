@@ -1,88 +1,82 @@
 package com.guidewire.gigsuraksha.service;
 
-	import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.guidewire.gigsuraksha.entity.TrustScore;
 import com.guidewire.gigsuraksha.repository.claimrepository;
 import com.guidewire.gigsuraksha.repository.trustscorerepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-	import java.util.Optional;
-	import java.util.UUID;
+import java.util.Optional;
+import java.util.UUID;
 
-	@Service
-	public class trustscoreserviceimpl implements trustscoreservice {
+@Service
+public class trustscoreserviceimpl implements trustscoreservice {
 
-		@Autowired
-	    private trustscorerepository repository;
-		@Autowired
-		private claimrepository claimRepo;
-		@Override
-		public void applyDelta(UUID partnerId, String reason, Double amount) {
+    @Autowired
+    private trustscorerepository repository;
 
-		    TrustScore trust = repository.findByPartnerId(partnerId).orElse(null);
+    @Autowired
+    private claimrepository claimRepo;
 
-		    if (trust == null) return;
+    @Override
+    public void applyDelta(UUID partnerId, String reason, Double amount) {
 
-		    Double current = trust.getCurrentScore() == null ? 1.0 : trust.getCurrentScore();
+        Optional<TrustScore> optional = repository.findByPartnerId(partnerId);
 
-		    trust.setCurrentScore(current + amount);
-		    trust.setLastEvent(reason);
-		    trust.setUpdatedAt(LocalDateTime.now());
+        if (optional.isEmpty()) return;
 
-		    repository.save(trust);
-		}
+        TrustScore trust = optional.get();
 
-	    @Override
-	    public Double getCurrentScore(UUID partnerId) {
+        BigDecimal current = trust.getCurrentScore() == null ? BigDecimal.ONE : trust.getCurrentScore();
+        BigDecimal delta = amount == null ? BigDecimal.ZERO : BigDecimal.valueOf(amount);
 
-	        Optional<TrustScore> optional = repository.findById(partnerId);
+        trust.setCurrentScore(current.add(delta));
+        trust.setLastEvent(reason);
+        trust.setUpdatedAt(LocalDateTime.now());
 
-	        if (optional.isPresent()) {
-	            return optional.get().getCurrentScore();
-	        }
+        repository.save(trust);
+    }
 
-	        return 0.0;
-	    }
+    @Override
+    public BigDecimal getCurrentScore(UUID partnerId) {
 
-	    @Override
-	    public void checkSuspension(UUID partnerId) {
+        return repository.findByPartnerId(partnerId)
+                .map(TrustScore::getCurrentScore)
+                .orElse(BigDecimal.ZERO);
+    }
 
-	        Optional<TrustScore> optional = repository.findById(partnerId);
+    @Override
+    public void checkSuspension(UUID partnerId) {
 
-	        if (optional.isPresent()) {
-	            TrustScore trust = optional.get();
+        repository.findByPartnerId(partnerId).ifPresent(trust -> {
+            if (trust.getCurrentScore() != null &&
+                trust.getCurrentScore().compareTo(BigDecimal.valueOf(0.3)) < 0) {
+                trust.setIsSuspended(true);
+            }
+            repository.save(trust);
+        });
+    }
 
-	            if (trust.getCurrentScore() != null && trust.getCurrentScore() < 0.3) {
-	                trust.setIsSuspended(true);
-	            }
+    @Override
+    public String getLabel(UUID partnerId) {
 
-	            repository.save(trust);
-	        }
-	    }
+        Optional<TrustScore> optional = repository.findByPartnerId(partnerId);
 
-	    @Override
-	    public String getLabel(UUID partnerId) {
+        if (optional.isPresent()) {
+            TrustScore trust = optional.get();
+            BigDecimal score = trust.getCurrentScore();
 
-	        Optional<TrustScore> optional = repository.findById(partnerId);
+            if (score != null) {
+                if (score.compareTo(BigDecimal.valueOf(0.8)) >= 0) return "excellent";
+                if (score.compareTo(BigDecimal.valueOf(0.6)) >= 0) return "good";
+                if (score.compareTo(BigDecimal.valueOf(0.4)) >= 0) return "average";
+                return "risk";
+            }
+        }
 
-	        if (optional.isPresent()) {
-	            TrustScore trust = optional.get();
-
-	            Double score = trust.getCurrentScore();
-
-	            if (score != null) {
-	                if (score >= 0.8) return "excellent";
-	                if (score >= 0.6) return "good";
-	                if (score >= 0.4) return "average";
-	                return "risk";
-	            }
-	        }
-
-	        return "unknown";
-	    }
-
-		
-	
-	}
+        return "unknown";
+    }
+}

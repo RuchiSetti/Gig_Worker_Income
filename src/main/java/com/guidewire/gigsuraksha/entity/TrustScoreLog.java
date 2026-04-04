@@ -1,7 +1,7 @@
 package com.guidewire.gigsuraksha.entity;
 
-
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -9,28 +9,28 @@ import java.util.UUID;
 public class TrustScoreLog {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID logId;
 
+    @Column(nullable = false)
     private UUID partnerId;
 
-    private String eventType; // clean_claim | gps_spoof | fraud | duplicate...
+    private String eventType; // clean_claim | gps_spoof | fraud | duplicate | other
 
     @Column(precision = 4, scale = 3)
-    private Double delta;
+    private BigDecimal delta;
 
     @Column(precision = 4, scale = 3)
-    private Double scoreBefore;
+    private BigDecimal scoreBefore;
 
     @Column(precision = 4, scale = 3)
-    private Double scoreAfter;
+    private BigDecimal scoreAfter;
 
     private UUID relatedClaimId;
 
     private LocalDateTime loggedAt;
 
-    // getters & setters
-
+    // Getters & Setters
     public UUID getLogId() {
         return logId;
     }
@@ -55,27 +55,27 @@ public class TrustScoreLog {
         this.eventType = eventType;
     }
 
-    public Double getDelta() {
+    public BigDecimal getDelta() {
         return delta;
     }
 
-    public void setDelta(Double delta) {
+    public void setDelta(BigDecimal delta) {
         this.delta = delta;
     }
 
-    public Double getScoreBefore() {
+    public BigDecimal getScoreBefore() {
         return scoreBefore;
     }
 
-    public void setScoreBefore(Double scoreBefore) {
+    public void setScoreBefore(BigDecimal scoreBefore) {
         this.scoreBefore = scoreBefore;
     }
 
-    public Double getScoreAfter() {
+    public BigDecimal getScoreAfter() {
         return scoreAfter;
     }
 
-    public void setScoreAfter(Double scoreAfter) {
+    public void setScoreAfter(BigDecimal scoreAfter) {
         this.scoreAfter = scoreAfter;
     }
 

@@ -1,5 +1,6 @@
 package com.guidewire.gigsuraksha.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -34,12 +35,12 @@ public class premiumcalculationserviceimpl implements premiumcalculationservice 
         calc.setPartnerId(partnerId);
         calc.setWeekStart(week);
 
-        calc.setKFactor(K_FACTOR);
-        calc.setExpectedWeeklyIncome(expectedWeeklyIncome);
-        calc.setRiskFactorR(riskFactorR);
-        calc.setVariabilityV(variabilityV);
-        calc.setCoverageMultiplierC(coverageMultiplierC);
-        calc.setCrf(crf);
+        calc.setKFactor(BigDecimal.valueOf(K_FACTOR));
+        calc.setExpectedWeeklyIncome(BigDecimal.valueOf(expectedWeeklyIncome));
+        calc.setRiskFactorR(BigDecimal.valueOf(riskFactorR));
+        calc.setVariabilityV(BigDecimal.valueOf(variabilityV));
+        calc.setCoverageMultiplierC(BigDecimal.valueOf(coverageMultiplierC));
+        calc.setCrf(BigDecimal.valueOf(crf));
 
         // 🔥 REAL FORMULA IMPLEMENTATION
         Double premium = K_FACTOR
@@ -49,7 +50,7 @@ public class premiumcalculationserviceimpl implements premiumcalculationservice 
                 * coverageMultiplierC
                 * crf;
 
-        calc.setFinalPremium(premium);
+        calc.setFinalPremium(BigDecimal.valueOf(premium));
         calc.setCalculatedAt(LocalDateTime.now());
 
         repository.save(calc);

@@ -11,7 +11,7 @@ import com.guidewire.gigsuraksha.entity.IncomeProfile;
 public interface incomeprofilerepository extends JpaRepository<IncomeProfile, UUID>{
 	
 
-	    Optional<IncomeProfile> findByPartnerId(UUID partnerId);
+	 Optional<IncomeProfile> findByPartnerId(UUID partnerId); 
 
 	}
 	

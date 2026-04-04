@@ -1,4 +1,5 @@
 package com.guidewire.gigsuraksha.service;
+import java.math.BigDecimal;
 import java.util.UUID;
 public interface risksnapshotservice {
 	
@@ -7,11 +8,10 @@ public interface risksnapshotservice {
 
 	
 
-	  void generateWeeklySnapshot(UUID zoneId);
+	void generateWeeklySnapshot(UUID zoneId);
 
-	    void getZoneExposure(UUID zoneId);
+    BigDecimal getZoneExposure(UUID zoneId);
 
-	    void flagHighRiskZones(UUID snapshotId);
-
+    void flagHighRiskZones(UUID snapshotId);
 	
 }

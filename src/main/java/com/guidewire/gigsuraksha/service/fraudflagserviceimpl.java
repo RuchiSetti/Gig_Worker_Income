@@ -9,6 +9,7 @@ import com.guidewire.gigsuraksha.entity.FraudFlag;
 import com.guidewire.gigsuraksha.repository.claimrepository;
 import com.guidewire.gigsuraksha.repository.fraudflagrepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 	import java.util.Optional;
 	import java.util.UUID;
@@ -34,9 +35,9 @@ import java.time.LocalDateTime;
 		     flag.setDetectionLayer("rule_based");
 
 		     // example logic
-		     flag.setFraudProbability(0.6);
+		     flag.setFraudProbability(new BigDecimal("0.6"));
 
-		     if (flag.getFraudProbability() > 0.7) {
+		     if (flag.getFraudProbability().compareTo(new BigDecimal("0.7")) > 0) {
 		         flag.setActionTaken("flagged");
 		     } else {
 		         flag.setActionTaken("clean");
@@ -55,7 +56,7 @@ import java.time.LocalDateTime;
 		            FraudFlag flag = optional.get();
 
 		            flag.setDetectionLayer("xgboost");
-		            flag.setFraudProbability(0.7);
+		            flag.setFraudProbability(new BigDecimal("0.7"));
 
 		            repository.save(flag);
 		        }
@@ -70,7 +71,7 @@ import java.time.LocalDateTime;
 		            FraudFlag flag = optional.get();
 
 		            flag.setDetectionLayer("isolation_forest");
-		            flag.setFraudProbability(0.5);
+		            flag.setFraudProbability(new BigDecimal("0.5"));
 
 		            repository.save(flag);
 		        }

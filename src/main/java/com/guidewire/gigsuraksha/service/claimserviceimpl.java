@@ -11,6 +11,7 @@ import com.guidewire.gigsuraksha.repository.incomeprofilerepository;
 import com.guidewire.gigsuraksha.repository.incomerecordrepository;
 import com.guidewire.gigsuraksha.repository.trustscorerepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class claimserviceimpl implements claimservice {
 
     @Autowired
     private claimrepository repository;
+
     @Autowired
     private incomerecordrepository incomeRecordRepo;
 
@@ -39,12 +41,12 @@ public class claimserviceimpl implements claimservice {
         claim.setPlanId(planId);
         claim.setTriggerEventId(triggerId);
         claim.setClaimDate(LocalDate.now());
-        claim.setIncomeLoss(200.0);
+        claim.setIncomeLoss(BigDecimal.valueOf(200.0)); // Corrected to BigDecimal
         claim.setCoveragePercentage(60);
-        claim.setTrustScoreAtClaim(0.8);
-        claim.setFinalPayout(0.0);
+        claim.setTrustScoreAtClaim(BigDecimal.valueOf(0.8)); // Corrected to BigDecimal
+        claim.setFinalPayout(BigDecimal.ZERO); // Corrected to BigDecimal
         claim.setStatus("pending");
-        claim.setFraudProbability(0.1);
+        claim.setFraudProbability(BigDecimal.valueOf(0.1)); // Corrected to BigDecimal
         claim.setInitiatedAt(LocalDateTime.now());
 
         repository.save(claim);
@@ -58,24 +60,24 @@ public class claimserviceimpl implements claimservice {
         if (optional.isPresent()) {
 
             Claim claim = optional.get();
-
             UUID partnerId = claim.getPartnerId();
 
             IncomeRecord record = incomeRecordRepo
-                .findByPartnerIdAndRecordDate(partnerId, claim.getClaimDate())
-                .orElse(null);
+                    .findByPartnerIdAndRecordDate(partnerId, claim.getClaimDate())
+                    .orElse(null);
 
             IncomeProfile profile = incomeProfileRepo
-                .findByPartnerId(partnerId)
-                .orElse(null);
+                    .findByPartnerId(partnerId)
+                    .orElse(null);
 
             if (record != null && profile != null) {
 
-                Double loss = profile.getPredictedDailyIncome() - record.getActualIncome();
+                BigDecimal loss = profile.getPredictedDailyIncome().subtract(record.getActualIncome());
 
                 claim.setIncomeLoss(loss);
 
-                Double payout = loss * claim.getCoveragePercentage() / 100;
+                BigDecimal payout = loss.multiply(BigDecimal.valueOf(claim.getCoveragePercentage()))
+                                        .divide(BigDecimal.valueOf(100));
 
                 claim.setFinalPayout(payout);
 
@@ -92,9 +94,9 @@ public class claimserviceimpl implements claimservice {
         if (optional.isPresent()) {
             Claim claim = optional.get();
 
-            claim.setFraudProbability(0.2);
+            claim.setFraudProbability(BigDecimal.valueOf(0.2));
 
-            if (claim.getFraudProbability() > 0.7) {
+            if (claim.getFraudProbability().compareTo(BigDecimal.valueOf(0.7)) > 0) {
                 claim.setStatus("flagged");
             }
 

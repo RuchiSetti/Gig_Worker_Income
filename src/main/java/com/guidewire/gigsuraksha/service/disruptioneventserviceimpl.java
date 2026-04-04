@@ -10,6 +10,7 @@ import com.guidewire.gigsuraksha.entity.DisruptionEvent;
 import com.guidewire.gigsuraksha.repository.claimrepository;
 import com.guidewire.gigsuraksha.repository.disruptioneventrepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 	import java.util.Optional;
 	import java.util.UUID;
@@ -64,7 +65,7 @@ import java.time.LocalDateTime;
 		        if (optional.isPresent()) {
 		            DisruptionEvent event = optional.get();
 
-		            event.setCrfValue(0.7);
+		            event.setCrfValue(new BigDecimal("0.7"));
 
 		            repository.save(event);
 		        }

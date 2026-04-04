@@ -1,6 +1,8 @@
 package com.guidewire.gigsuraksha.entity;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,7 +18,7 @@ public class PayOut {
     private UUID partnerId;
 
     @Column(precision = 10, scale = 2)
-    private Double amount;
+    private BigDecimal amount;
 
     @Column(length = 50)
     private String upiId;
@@ -59,11 +61,11 @@ public class PayOut {
         this.partnerId = partnerId;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

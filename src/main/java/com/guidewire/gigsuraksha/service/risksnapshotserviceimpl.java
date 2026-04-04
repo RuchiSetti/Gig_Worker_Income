@@ -1,85 +1,88 @@
 package com.guidewire.gigsuraksha.service;
 
-
-	import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.stereotype.Service;
-
 import com.guidewire.gigsuraksha.entity.RiskSnapShot;
+
 import com.guidewire.gigsuraksha.repository.claimrepository;
 import com.guidewire.gigsuraksha.repository.deliverypartnerrepository;
 import com.guidewire.gigsuraksha.repository.risksnapshotrepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
-	import java.time.LocalDateTime;
-	import java.util.Optional;
-	import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
-	@Service
-	public class risksnapshotserviceimpl implements risksnapshotservice {
+@Service
+public class risksnapshotserviceimpl implements risksnapshotservice {
 
+    @Autowired
+    private risksnapshotrepository repository;
 
-	    @Autowired
-	    private risksnapshotrepository repository;
+    @Autowired
+    private claimrepository claimRepo;
 
-	    @Autowired
-	    private claimrepository claimRepo;
+    @Autowired
+    private deliverypartnerrepository deliveryPartnerRepo;
 
-	    @Autowired
-	    private deliverypartnerrepository deliveryPartnerRepo;
-	   
-	    @Override
-	    public void generateWeeklySnapshot(UUID zoneId) {
+    @Override
+    public void generateWeeklySnapshot(UUID zoneId) {
 
-	        RiskSnapShot snapshot = new RiskSnapShot();
+        RiskSnapShot snapshot = new RiskSnapShot();
 
-	        snapshot.setSnapshotId(UUID.randomUUID());
-	        snapshot.setZoneId(zoneId); // ✅ use incoming zoneId
-	        snapshot.setWeekStart(LocalDate.now());
+        snapshot.setSnapshotId(UUID.randomUUID());
+        snapshot.setZoneId(zoneId);
+        snapshot.setWeekStart(LocalDate.now());
 
-	        // 🔥 REAL DATA (filtered by zone)
-	        snapshot.setActivePartners(
-	            (int)deliveryPartnerRepo.findAll().stream()
-	                .filter(p -> zoneId.equals(p.getZoneId()))
-	                .count()
-	        );
+        // Count active partners in this zone
+        int activePartners = (int) deliveryPartnerRepo.findAll().stream()
+                .filter(p -> zoneId.equals(p.getZoneId()))
+                .count();
+        snapshot.setActivePartners(activePartners);
 
-	        snapshot.setTotalExposure(
-	        	    claimRepo.findAll().stream()
-	        	        .filter(c -> {
-	        	            return deliveryPartnerRepo.findById(c.getPartnerId())
-	        	                    .map(p -> zoneId.equals(p.getZoneId()))
-	        	                    .orElse(false);
-	        	        })
-	        	        .mapToDouble(c -> c.getFinalPayout() == null ? 0.0 : c.getFinalPayout())
-	        	        .sum()
-	        	);
+        // Calculate total exposure for this zone
+        
 
-	        snapshot.setCreatedAt(LocalDateTime.now());
+        BigDecimal totalExposure = claimRepo.findAll().stream()
+                .filter(c -> deliveryPartnerRepo.findById(c.getPartnerId())
+                        .map(p -> zoneId.equals(p.getZoneId()))
+                        .orElse(false))
+                .map(c -> c.getFinalPayout() == null ? BigDecimal.ZERO : c.getFinalPayout())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-	        repository.save(snapshot);
-	    }
-	    @Override
-	    public void getZoneExposure(UUID zoneId) {
+        snapshot.setTotalExposure(totalExposure);
+        snapshot.setCreatedAt(LocalDateTime.now());
 
-	        // You can later optimize using custom query
-	        repository.findAll().stream()
-	                .filter(s -> s.getZoneId().equals(zoneId))
-	                .forEach(s -> s.getTotalExposure());
-	    }
+        repository.save(snapshot);
+    }
 
-	    @Override
-	    public void flagHighRiskZones(UUID snapshotId) {
+    @Override
+    public BigDecimal getZoneExposure(UUID zoneId) {
+        // Sum totalExposure of all snapshots for this zone
+        return repository.findAll().stream()
+                .filter(s -> zoneId.equals(s.getZoneId()))
+                .map(RiskSnapShot::getTotalExposure)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
-	        Optional<RiskSnapShot> optional = repository.findById(snapshotId);
+    @Override
+    public void flagHighRiskZones(UUID snapshotId) {
 
-	        if (optional.isPresent()) {
-	        	RiskSnapShot snapshot = optional.get();
+        Optional<RiskSnapShot> optional = repository.findById(snapshotId);
 
-	            if (snapshot.getComputedCrf() != null && snapshot.getComputedCrf() > 0.7) {
-	                snapshot.setSeasonalRiskIndex(0.9); // high risk zone
-	            }
+        if (optional.isPresent()) {
+            RiskSnapShot snapshot = optional.get();
 
-	            repository.save(snapshot);
-	        }
-	    }
-	}
+            // Proper BigDecimal comparison
+            if (snapshot.getComputedCrf() != null &&
+                snapshot.getComputedCrf().compareTo(BigDecimal.valueOf(0.7)) > 0) {
+
+                snapshot.setSeasonalRiskIndex(BigDecimal.valueOf(0.9)); // high risk zone
+            }
+
+            repository.save(snapshot);
+        }
+    }
+}

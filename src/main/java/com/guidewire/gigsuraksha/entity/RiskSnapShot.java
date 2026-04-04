@@ -1,8 +1,7 @@
 package com.guidewire.gigsuraksha.entity;
 
-
-
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,7 +10,7 @@ import java.util.UUID;
 public class RiskSnapShot {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID snapshotId;
 
     private UUID zoneId;
@@ -19,26 +18,25 @@ public class RiskSnapShot {
     private LocalDate weekStart;
 
     @Column(precision = 4, scale = 3)
-    private Double weatherForecastScore;
+    private BigDecimal weatherForecastScore;
 
     @Column(precision = 4, scale = 3)
-    private Double seasonalRiskIndex;
+    private BigDecimal seasonalRiskIndex;
 
     @Column(precision = 6, scale = 4)
-    private Double historicalLossRatio;
+    private BigDecimal historicalLossRatio;
 
     private Integer activePartners;
 
     @Column(precision = 12, scale = 2)
-    private Double totalExposure;
+    private BigDecimal totalExposure;
 
     @Column(precision = 4, scale = 3)
-    private Double computedCrf;
+    private BigDecimal computedCrf;
 
     private LocalDateTime createdAt;
 
-    // getters & setters
-
+    // Getters & Setters
     public UUID getSnapshotId() {
         return snapshotId;
     }
@@ -63,27 +61,27 @@ public class RiskSnapShot {
         this.weekStart = weekStart;
     }
 
-    public Double getWeatherForecastScore() {
+    public BigDecimal getWeatherForecastScore() {
         return weatherForecastScore;
     }
 
-    public void setWeatherForecastScore(Double weatherForecastScore) {
+    public void setWeatherForecastScore(BigDecimal weatherForecastScore) {
         this.weatherForecastScore = weatherForecastScore;
     }
 
-    public Double getSeasonalRiskIndex() {
+    public BigDecimal getSeasonalRiskIndex() {
         return seasonalRiskIndex;
     }
 
-    public void setSeasonalRiskIndex(Double seasonalRiskIndex) {
+    public void setSeasonalRiskIndex(BigDecimal seasonalRiskIndex) {
         this.seasonalRiskIndex = seasonalRiskIndex;
     }
 
-    public Double getHistoricalLossRatio() {
+    public BigDecimal getHistoricalLossRatio() {
         return historicalLossRatio;
     }
 
-    public void setHistoricalLossRatio(Double historicalLossRatio) {
+    public void setHistoricalLossRatio(BigDecimal historicalLossRatio) {
         this.historicalLossRatio = historicalLossRatio;
     }
 
@@ -95,19 +93,19 @@ public class RiskSnapShot {
         this.activePartners = activePartners;
     }
 
-    public Double getTotalExposure() {
+    public BigDecimal getTotalExposure() {
         return totalExposure;
     }
 
-    public void setTotalExposure(Double totalExposure) {
+    public void setTotalExposure(BigDecimal totalExposure) {
         this.totalExposure = totalExposure;
     }
 
-    public Double getComputedCrf() {
+    public BigDecimal getComputedCrf() {
         return computedCrf;
     }
 
-    public void setComputedCrf(Double computedCrf) {
+    public void setComputedCrf(BigDecimal computedCrf) {
         this.computedCrf = computedCrf;
     }
 

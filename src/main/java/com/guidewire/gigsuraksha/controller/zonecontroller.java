@@ -1,34 +1,41 @@
 package com.guidewire.gigsuraksha.controller;
 
-	import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;
 
 import com.guidewire.gigsuraksha.service.zoneservice;
 
-	@RestController
-	@RequestMapping("/api/zone")
-	public class zonecontroller {
+import java.util.UUID;
 
-		  @Autowired
-		    private zoneservice service;
+@RestController
+@RequestMapping("/api/zone")
+public class zonecontroller {
 
-		    @GetMapping("/risk/{zoneId}")
-		    public String getZoneRiskFactor(@PathVariable UUID zoneId) {
-		        service.getZoneRiskFactor(zoneId);
-		        return "Risk Factor Retrieved";
-		    }
+    private final zoneservice service;
 
-		    @PostMapping("/update/{zoneId}")
-		    public String updateRiskScore(@PathVariable UUID zoneId) {
-		        service.updateRiskScore(zoneId);
-		        return "Risk Updated";
-		    }
+    @Autowired
+    public zonecontroller(zoneservice service) {
+        this.service = service;
+    }
 
-		    @GetMapping("/partners/{zoneId}")
-		    public String getActivePartners(@PathVariable UUID zoneId) {
-		        service.getActivePartners(zoneId);
-		        return "Active Partners Retrieved";
-		    }
-		}
+    // Retrieve the risk factor of a zone
+    @GetMapping("/risk/{zoneId}")
+    public String getZoneRiskFactor(@PathVariable UUID zoneId) {
+        service.getZoneRiskFactor(zoneId);
+        return "Risk Factor Retrieved";
+    }
+
+    // Update the risk score of a zone
+    @PostMapping("/update/{zoneId}")
+    public String updateRiskScore(@PathVariable UUID zoneId,
+                                  @RequestParam double newRiskScore) {
+        service.updateRiskScore(zoneId, newRiskScore);
+        return "Risk Score Updated Successfully";
+    }
+    // Retrieve active partners for a zone
+    @GetMapping("/partners/{zoneId}")
+    public String getActivePartners(@PathVariable UUID zoneId) {
+        service.getActivePartners(zoneId);
+        return "Active Partners Retrieved";
+    }
+}

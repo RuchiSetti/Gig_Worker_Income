@@ -7,6 +7,7 @@ import com.guidewire.gigsuraksha.entity.InsurancePlan;
 import com.guidewire.gigsuraksha.repository.incomeprofilerepository;
 import com.guidewire.gigsuraksha.repository.insuranceplanrepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class insuranceplanserviceimpl implements insuranceplanservice {
         plan.setPartnerId(partnerId);
         plan.setCoverageTier("basic");
         plan.setCoveragePercentage(30);
-        plan.setWeeklyPremium(100.0);
+        plan.setWeeklyPremium(new BigDecimal("100.0"));
         plan.setWeekStartDate(LocalDate.now());
         plan.setWeekEndDate(LocalDate.now().plusDays(7));
         plan.setStatus("active");

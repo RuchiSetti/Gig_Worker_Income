@@ -1,8 +1,8 @@
 package com.guidewire.gigsuraksha.entity;
 
-
-
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,25 +19,25 @@ public class PremiumCalculation {
     private LocalDate weekStart;
 
     @Column(precision = 6, scale = 4)
-    private Double kFactor;
+    private BigDecimal kFactor;
 
     @Column(precision = 10, scale = 2)
-    private Double expectedWeeklyIncome;
+    private BigDecimal expectedWeeklyIncome;
 
     @Column(precision = 4, scale = 3)
-    private Double riskFactorR;
+    private BigDecimal riskFactorR;
 
     @Column(precision = 4, scale = 3)
-    private Double variabilityV;
+    private BigDecimal variabilityV;
 
     @Column(precision = 4, scale = 3)
-    private Double coverageMultiplierC;
+    private BigDecimal coverageMultiplierC;
 
     @Column(precision = 4, scale = 3)
-    private Double crf;
+    private BigDecimal crf;
 
     @Column(precision = 10, scale = 2)
-    private Double finalPremium;
+    private BigDecimal finalPremium;
 
     private LocalDateTime calculatedAt;
 
@@ -67,59 +67,59 @@ public class PremiumCalculation {
         this.weekStart = weekStart;
     }
 
-    public Double getKFactor() {
+    public BigDecimal getKFactor() {
         return kFactor;
     }
 
-    public void setKFactor(Double kFactor) {
+    public void setKFactor(BigDecimal kFactor) {
         this.kFactor = kFactor;
     }
 
-    public Double getExpectedWeeklyIncome() {
+    public BigDecimal getExpectedWeeklyIncome() {
         return expectedWeeklyIncome;
     }
 
-    public void setExpectedWeeklyIncome(Double expectedWeeklyIncome) {
+    public void setExpectedWeeklyIncome(BigDecimal expectedWeeklyIncome) {
         this.expectedWeeklyIncome = expectedWeeklyIncome;
     }
 
-    public Double getRiskFactorR() {
+    public BigDecimal getRiskFactorR() {
         return riskFactorR;
     }
 
-    public void setRiskFactorR(Double riskFactorR) {
+    public void setRiskFactorR(BigDecimal riskFactorR) {
         this.riskFactorR = riskFactorR;
     }
 
-    public Double getVariabilityV() {
+    public BigDecimal getVariabilityV() {
         return variabilityV;
     }
 
-    public void setVariabilityV(Double variabilityV) {
+    public void setVariabilityV(BigDecimal variabilityV) {
         this.variabilityV = variabilityV;
     }
 
-    public Double getCoverageMultiplierC() {
+    public BigDecimal getCoverageMultiplierC() {
         return coverageMultiplierC;
     }
 
-    public void setCoverageMultiplierC(Double coverageMultiplierC) {
+    public void setCoverageMultiplierC(BigDecimal coverageMultiplierC) {
         this.coverageMultiplierC = coverageMultiplierC;
     }
 
-    public Double getCrf() {
+    public BigDecimal getCrf() {
         return crf;
     }
 
-    public void setCrf(Double crf) {
+    public void setCrf(BigDecimal crf) {
         this.crf = crf;
     }
 
-    public Double getFinalPremium() {
+    public BigDecimal getFinalPremium() {
         return finalPremium;
     }
 
-    public void setFinalPremium(Double finalPremium) {
+    public void setFinalPremium(BigDecimal finalPremium) {
         this.finalPremium = finalPremium;
     }
 

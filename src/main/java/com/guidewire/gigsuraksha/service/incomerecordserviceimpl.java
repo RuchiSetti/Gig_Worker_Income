@@ -7,6 +7,8 @@ import com.guidewire.gigsuraksha.entity.IncomeRecord;
 import com.guidewire.gigsuraksha.repository.incomeprofilerepository;
 import com.guidewire.gigsuraksha.repository.incomerecordrepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,12 +32,12 @@ public class incomerecordserviceimpl implements incomerecordservice {
 
         record.setPartnerId(partnerId);
         record.setRecordDate(date);
-        record.setActualIncome(500.0);
-        record.setExpectedIncome(600.0);
-        record.setIncomeLoss(100.0);
-        record.setZScore(0.0);
+        record.setActualIncome(new BigDecimal("500.0"));
+        record.setExpectedIncome(new BigDecimal("600.0"));
+        record.setIncomeLoss(new BigDecimal("100.0"));
+        record.setZScore(new BigDecimal("0.0"));
         record.setOrdersCompleted(10);
-        record.setHoursActive(8.0);
+        record.setHoursActive(new BigDecimal("8.0"));
         record.setDataSource("platform_api");
 
         repository.save(record);
@@ -54,11 +56,10 @@ public class incomerecordserviceimpl implements incomerecordservice {
 
         if (record == null || profile == null) return;
 
-        Double z = (record.getActualIncome() - profile.getPredictedDailyIncome())
-                / profile.getStdDeviation();
+        BigDecimal diff = record.getActualIncome().subtract(profile.getPredictedDailyIncome());
+        BigDecimal z = diff.divide(profile.getStdDeviation(), 6, RoundingMode.HALF_UP); // scale 6, adjust if needed
 
         record.setZScore(z);
-
         repository.save(record);
     }
 
@@ -71,9 +72,9 @@ public class incomerecordserviceimpl implements incomerecordservice {
         if (optional.isPresent()) {
             IncomeRecord record = optional.get();
 
-            if (record.getZScore() != null && record.getZScore() < -2) {
+            if (record.getZScore() != null && record.getZScore().compareTo(new BigDecimal("-2")) < 0) {
                 record.setIncomeLoss(
-                        record.getExpectedIncome() - record.getActualIncome()
+                    record.getExpectedIncome().subtract(record.getActualIncome())
                 );
             }
 

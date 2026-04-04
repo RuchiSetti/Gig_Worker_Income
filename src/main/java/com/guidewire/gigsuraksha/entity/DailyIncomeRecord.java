@@ -1,6 +1,7 @@
 package com.guidewire.gigsuraksha.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -16,21 +17,21 @@ public class DailyIncomeRecord {
     private LocalDate recordDate;
 
     @Column(precision = 10, scale = 2)
-    private Double actualIncome;
+    private BigDecimal actualIncome;
 
     @Column(precision = 10, scale = 2)
-    private Double expectedIncome;
+    private BigDecimal expectedIncome;
 
     @Column(precision = 10, scale = 2)
-    private Double incomeLoss;
+    private BigDecimal incomeLoss;
 
     @Column(precision = 6, scale = 4)
-    private Double zScore;
+    private BigDecimal zScore;
 
     private Integer ordersCompleted;
 
     @Column(precision = 4, scale = 2)
-    private Double hoursActive;
+    private BigDecimal hoursActive;
 
     private String dataSource; // platform_api | simulated
 
@@ -60,35 +61,35 @@ public class DailyIncomeRecord {
         this.recordDate = recordDate;
     }
 
-    public Double getActualIncome() {
+    public BigDecimal getActualIncome() {
         return actualIncome;
     }
 
-    public void setActualIncome(Double actualIncome) {
+    public void setActualIncome(BigDecimal actualIncome) {
         this.actualIncome = actualIncome;
     }
 
-    public Double getExpectedIncome() {
+    public BigDecimal getExpectedIncome() {
         return expectedIncome;
     }
 
-    public void setExpectedIncome(Double expectedIncome) {
+    public void setExpectedIncome(BigDecimal expectedIncome) {
         this.expectedIncome = expectedIncome;
     }
 
-    public Double getIncomeLoss() {
+    public BigDecimal getIncomeLoss() {
         return incomeLoss;
     }
 
-    public void setIncomeLoss(Double incomeLoss) {
+    public void setIncomeLoss(BigDecimal incomeLoss) {
         this.incomeLoss = incomeLoss;
     }
 
-    public Double getZScore() {
+    public BigDecimal getZScore() {
         return zScore;
     }
 
-    public void setZScore(Double zScore) {
+    public void setZScore(BigDecimal zScore) {
         this.zScore = zScore;
     }
 
@@ -100,11 +101,11 @@ public class DailyIncomeRecord {
         this.ordersCompleted = ordersCompleted;
     }
 
-    public Double getHoursActive() {
+    public BigDecimal getHoursActive() {
         return hoursActive;
     }
 
-    public void setHoursActive(Double hoursActive) {
+    public void setHoursActive(BigDecimal hoursActive) {
         this.hoursActive = hoursActive;
     }
 

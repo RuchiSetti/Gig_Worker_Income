@@ -1,8 +1,7 @@
 package com.guidewire.gigsuraksha.entity;
 
-
-
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -10,10 +9,10 @@ import java.util.UUID;
 public class Zone {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID zoneId;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String zoneName;
 
     @Column(length = 50)
@@ -22,23 +21,23 @@ public class Zone {
     @Column(length = 50)
     private String state;
 
+    @Column(length = 20)
     private String riskCategory; // low | medium | high | coastal
 
     @Column(precision = 4, scale = 3)
-    private Double riskFactorR;
+    private BigDecimal riskFactorR;
 
     @Column(precision = 9, scale = 6)
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Column(precision = 9, scale = 6)
-    private Double longitude;
+    private BigDecimal longitude;
 
     private Boolean isFloodProne;
 
     private LocalDate lastRiskUpdated;
 
-    // getters & setters
-
+    // Getters & Setters
     public UUID getZoneId() {
         return zoneId;
     }
@@ -79,27 +78,27 @@ public class Zone {
         this.riskCategory = riskCategory;
     }
 
-    public Double getRiskFactorR() {
+    public BigDecimal getRiskFactorR() {
         return riskFactorR;
     }
 
-    public void setRiskFactorR(Double riskFactorR) {
+    public void setRiskFactorR(BigDecimal riskFactorR) {
         this.riskFactorR = riskFactorR;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
@@ -107,8 +106,8 @@ public class Zone {
         return isFloodProne;
     }
 
-    public void setIsFloodProne(Boolean floodProne) {
-        isFloodProne = floodProne;
+    public void setIsFloodProne(Boolean isFloodProne) {
+        this.isFloodProne = isFloodProne;
     }
 
     public LocalDate getLastRiskUpdated() {

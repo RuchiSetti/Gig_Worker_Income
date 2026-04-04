@@ -4,9 +4,10 @@ import org.springframework.stereotype.Service;
 
 import com.guidewire.gigsuraksha.entity.PayOut;
 import com.guidewire.gigsuraksha.entity.SystemMetrics;
-import com.guidewire.gigsuraksha.repository.systemmetricsrepository;
 import com.guidewire.gigsuraksha.repository.payoutrepository;
+import com.guidewire.gigsuraksha.repository.systemmetricsrepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,7 @@ public class systemmetricsserviceimpl implements systemmetricsservice {
     private final payoutrepository payoutRepo;
     private final systemmetricsrepository repository;
 
-    // ✅ constructor injection (clean)
+    // ✅ constructor injection
     public systemmetricsserviceimpl(payoutrepository payoutRepo,
                                     systemmetricsrepository repository) {
         this.payoutRepo = payoutRepo;
@@ -30,18 +31,15 @@ public class systemmetricsserviceimpl implements systemmetricsservice {
     public void computeDailyMetrics() {
 
         SystemMetrics metrics = new SystemMetrics();
-
         metrics.setMetricId(UUID.randomUUID());
         metrics.setPeriodDate(LocalDate.now());
 
-        // 🔥 REAL DATA
-        double totalPayout = payoutRepo.findAll()
-                .stream()
-                .mapToDouble(PayOut::getAmount)
-                .sum();
+        // 🔥 REAL DATA: sum payouts as BigDecimal
+        BigDecimal totalPayout = payoutRepo.findAll().stream()
+                .map(p -> p.getAmount() == null ? BigDecimal.ZERO : p.getAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         metrics.setTotalPayoutsDisbursed(totalPayout);
-
         metrics.setComputedAt(LocalDateTime.now());
 
         repository.save(metrics);
@@ -49,7 +47,6 @@ public class systemmetricsserviceimpl implements systemmetricsservice {
 
     @Override
     public List<SystemMetrics> getLossRatioDashboard(LocalDate date) {
-
         return repository.findAll().stream()
                 .filter(m -> m.getPeriodDate().equals(date))
                 .collect(Collectors.toList());
@@ -57,7 +54,6 @@ public class systemmetricsserviceimpl implements systemmetricsservice {
 
     @Override
     public List<SystemMetrics> exportReport(LocalDate period) {
-
         return repository.findAll().stream()
                 .filter(m -> m.getPeriodDate().equals(period))
                 .collect(Collectors.toList());

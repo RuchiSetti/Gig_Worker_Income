@@ -1,61 +1,58 @@
 package com.guidewire.gigsuraksha.service;
 
-	import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.guidewire.gigsuraksha.entity.TrustScore;
 import com.guidewire.gigsuraksha.entity.TrustScoreLog;
 import com.guidewire.gigsuraksha.repository.trustscorelogrepository;
-import com.guidewire.gigsuraksha.repository.trustscorerepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-	import java.util.UUID;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-	@Service
-	public class trustscorelogserviceimpl implements trustscorelogservice {
-		@Autowired
-	    private trustscorelogrepository repository;
+@Service
+public class trustscorelogserviceimpl implements trustscorelogservice {
 
-	    @Override
-	    public void appendLog(UUID partnerId, String event, Double delta,
-	                          Double scoreBefore, Double scoreAfter, UUID relatedClaimId) {
+    @Autowired
+    private trustscorelogrepository repository;
 
-	        TrustScoreLog log = new TrustScoreLog();
+    @Override
+    public void appendLog(UUID partnerId, String event, Double delta,
+                          Double scoreBefore, Double scoreAfter, UUID relatedClaimId) {
 
-	        log.setLogId(UUID.randomUUID());
-	        log.setPartnerId(partnerId);
-	        log.setEventType(event);
-	        log.setDelta(delta);
-	        log.setScoreBefore(scoreBefore);
-	        log.setScoreAfter(scoreAfter);
-	        log.setRelatedClaimId(relatedClaimId);
-	        log.setLoggedAt(LocalDateTime.now());
+        TrustScoreLog log = new TrustScoreLog();
 
-	        repository.save(log);
-	    }
+        log.setLogId(UUID.randomUUID());
+        log.setPartnerId(partnerId);
+        log.setEventType(event);
 
-	    @Override
-	    public List<TrustScoreLog> getHistory(UUID partnerId) {
+        // convert Double to BigDecimal safely
+        log.setDelta(delta == null ? BigDecimal.ZERO : BigDecimal.valueOf(delta));
+        log.setScoreBefore(scoreBefore == null ? BigDecimal.ZERO : BigDecimal.valueOf(scoreBefore));
+        log.setScoreAfter(scoreAfter == null ? BigDecimal.ZERO : BigDecimal.valueOf(scoreAfter));
 
-	        return repository.findAll()
-	                .stream()
-	                .filter(log -> log.getPartnerId().equals(partnerId))
-	                .toList();
-	    }
+        log.setRelatedClaimId(relatedClaimId);
+        log.setLoggedAt(LocalDateTime.now());
 
-	    @Override
-	    public List<TrustScoreLog> getRolling30Days(UUID partnerId) {
+        repository.save(log);
+    }
 
-	        LocalDateTime cutoff = LocalDateTime.now().minusDays(30);
+    @Override
+    public List<TrustScoreLog> getHistory(UUID partnerId) {
+        return repository.findAll().stream()
+                .filter(log -> log.getPartnerId().equals(partnerId))
+                .collect(Collectors.toList());
+    }
 
-	        return repository.findAll()
-	                .stream()
-	                .filter(log -> log.getPartnerId().equals(partnerId)
-	                        && log.getLoggedAt().isAfter(cutoff))
-	                .toList();
-	    }
-	}
+    @Override
+    public List<TrustScoreLog> getRolling30Days(UUID partnerId) {
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(30);
 
-	
+        return repository.findAll().stream()
+                .filter(log -> log.getPartnerId().equals(partnerId)
+                        && log.getLoggedAt().isAfter(cutoff))
+                .collect(Collectors.toList());
+    }
+}

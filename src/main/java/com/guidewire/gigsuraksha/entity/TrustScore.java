@@ -1,6 +1,7 @@
 package com.guidewire.gigsuraksha.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -8,14 +9,14 @@ import java.util.UUID;
 public class TrustScore {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID trustId;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private UUID partnerId;
 
     @Column(precision = 4, scale = 3)
-    private Double currentScore;
+    private BigDecimal currentScore;
 
     private String label; // excellent | good | average | risk
 
@@ -30,8 +31,7 @@ public class TrustScore {
 
     private LocalDateTime updatedAt;
 
-    // getters & setters
-
+    // Getters & Setters
     public UUID getTrustId() {
         return trustId;
     }
@@ -48,11 +48,11 @@ public class TrustScore {
         this.partnerId = partnerId;
     }
 
-    public Double getCurrentScore() {
+    public BigDecimal getCurrentScore() {
         return currentScore;
     }
 
-    public void setCurrentScore(Double currentScore) {
+    public void setCurrentScore(BigDecimal currentScore) {
         this.currentScore = currentScore;
     }
 
@@ -84,8 +84,8 @@ public class TrustScore {
         return isSuspended;
     }
 
-    public void setIsSuspended(Boolean suspended) {
-        isSuspended = suspended;
+    public void setIsSuspended(Boolean isSuspended) {
+        this.isSuspended = isSuspended;
     }
 
     public String getLastEvent() {
