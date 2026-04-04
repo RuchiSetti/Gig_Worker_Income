@@ -7,6 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface insuranceplanrepository extends JpaRepository<InsurancePlan, UUID>{
-	
 	Optional<InsurancePlan> findByPartnerId(UUID partnerId);
+	java.util.List<InsurancePlan> findByPartnerIdAndStatus(UUID partnerId, String status);
 }

@@ -22,10 +22,10 @@ public class AuditLog {
 
     private UUID targetId;
 
-    @Column(columnDefinition = "JSONB")
+    @Column(columnDefinition = "TEXT")
     private String beforeState;
 
-    @Column(columnDefinition = "JSONB")
+    @Column(columnDefinition = "TEXT")
     private String afterState;
 
     @Column(length = 45)

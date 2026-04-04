@@ -8,5 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 	public interface claimrepository extends JpaRepository<Claim, UUID> {
-		 Optional<Claim> findByTriggerEventId(UUID triggerEventId);
+		Optional<Claim> findByTriggerEventId(UUID triggerEventId);
+		java.util.List<Claim> findByPartnerIdOrderByInitiatedAtDesc(UUID partnerId);
 }
